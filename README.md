@@ -137,5 +137,11 @@ cooldowns:
 ```
 ### Рекомендации
 - После любого изменения в `cooldowns.yml` выполняй `/jcd reload`
-
 - Если используешь плагины с алиасами (CMI, Essentials и т.д.) — обязательно добавляй их в раздел `aliases:` в `config.yml`
+
+<img width="922" height="499" alt="Screenshot_2" src="https://github.com/user-attachments/assets/b72b7c42-2f7b-4167-8377-e47299156dfe" />
+<img width="828" height="337" alt="Screenshot_4" src="https://github.com/user-attachments/assets/cd13a93e-2eb0-485f-97fd-3847dd4b12c8" />
+<img width="1081" height="358" alt="Screenshot_5" src="https://github.com/user-attachments/assets/852aed92-0d88-415b-8d73-67de4eb3a7bc" />
+<img width="1025" height="198" alt="Screenshot_7" src="https://github.com/user-attachments/assets/d1c25ed9-3017-42bc-a5f4-49d0d2256fcc" />
+<img width="1919" height="1007" alt="Screenshot_8" src="https://github.com/user-attachments/assets/e1353196-f21c-4910-8ea8-dfba69db39d0" />
+<img width="708" height="111" alt="Screenshot_3" src="https://github.com/user-attachments/assets/d4b9ea68-8a4d-41a2-8b5c-91a49a5152a4" />
