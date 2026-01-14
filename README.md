@@ -145,3 +145,5 @@ cooldowns:
 <img width="1025" height="198" alt="Screenshot_7" src="https://github.com/user-attachments/assets/d1c25ed9-3017-42bc-a5f4-49d0d2256fcc" />
 <img width="1919" height="1007" alt="Screenshot_8" src="https://github.com/user-attachments/assets/e1353196-f21c-4910-8ea8-dfba69db39d0" />
 <img width="708" height="111" alt="Screenshot_3" src="https://github.com/user-attachments/assets/d4b9ea68-8a4d-41a2-8b5c-91a49a5152a4" />
+<img width="563" height="106" alt="Screenshot_1" src="https://github.com/user-attachments/assets/f49ceb5e-1b49-495c-bb56-c431e03c1f2b" />
+
