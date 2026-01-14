@@ -1,0 +1,79 @@
+# Сообщения плагина
+messages:
+  no_permission: "&cНет прав."
+  reload_success: "&aКонфигурация перезагружена."
+  invalid_time: "&cНеверный формат времени. Примеры: 10s, 5m, 2h, 3d"
+  set_success: "&aКулдаун для &e%command% &aв группе &e%group% &aустановлен на &f%time%"
+  unset_success: "&aКулдаун для &e%command% &aв группе &e%group% &aудалён"
+  unset_not_found: "&cВ группе &e%group% &cнет кулдауна для команды &e%command%"
+  help:
+    - ""
+    - "  &eПомощь по командам"
+    - ""
+    - "  &6/jcd set <команда> <группа> <время> &7- установить кулдаун"
+    - "  &6/jcd unset <команда> <группа> &7- удалить кулдаун"
+    - "  &6/jcd list &7- список кулдаунов"
+    - "  &6/jcd reload &7- перезагрузить конфиг"
+    - "  "
+
+# Отправка сообщения задержки по центру екрана
+cooldown_title:
+  enabled: false
+  title: "&cЗадержка!"
+  subtitle: "&fИспользовать &c/%command% &fможно через: &c%cooldown_timer%"
+  display_time: 5s
+
+# Отправка сообщения задержки в екшнбар
+cooldown_actionbar:
+  enabled: false
+  message: "&cЗадержка! &fИспользовать &c/%command% &fможно через: &c%cooldown_timer%"
+  display_time: 5s
+
+# Отправка сообщения задержки в боссбар
+cooldown_bossbar:
+  enabled: false
+  bossbar:
+    color: "RED"
+    style: "SOLID"
+    message: "&cЗадержка! &fИспользовать &c/%command% &fможно через: &c%cooldown_timer%"
+    display_time: 5s
+
+# Отправка сообщения задержки в чат
+cooldown_chat:
+  enabled: true
+  message:
+    - ""
+    - "  &cЗадержка!"
+    - "  &fИспользовать &c/%command% &fможно через: &c%cooldown_timer%"
+    - ""
+
+# Звук при задержке использования команды
+cooldown_sound:
+  enabled: true
+  sound: BLOCK_ANVIL_PLACE
+  volume: 1.0
+  pitch: 1.5
+
+# Формат отображения списка кулдаунов по группам и их времени
+cooldowns_list:
+  header:
+    - ""
+    - "  &6Список установленных кулдаунов"
+    - ""
+  group: "  &6%group%:"
+  commands: "    &6- &e%command% &7: &f%cooldown_time%"
+  empty: "  &cНет установленных задержек"
+  empty-groups: "  &cНет ни одной группы с кулдаунами"
+  footer:
+    - ""
+    - "  &fПраво &ejcooldowns.bypass &fпозволяет"
+    - "  &fобойти задержку на использование команд"
+    - ""
+
+# Алиасы для команд
+# Назначение: объединяет разные варианты одной команды под один кулдаун
+aliases:
+  "cmi home": "home"
+  "essentials:home": "home"
+  "cmi warp": "warp"
+  "essentials:warp": "warp"

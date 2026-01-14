@@ -1,0 +1,13 @@
+name: JCooldowns
+version: '${project.version}'
+main: jfbdev.jcooldowns.JCooldowns
+api-version: '1.16'
+authors: [ jFrostyBoy ]
+softdepend: [LuckPerms]
+description: Установка задержек на команды для разных донат-групп
+
+commands:
+  jcd:
+    description: Основная команда плагина
+    usage: /jcd <reload|list|set|unset>
+    permission: jcooldowns.admin
