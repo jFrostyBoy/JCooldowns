@@ -289,4 +289,25 @@ public class CooldownManager {
         }
         return false;
     }
+
+    public int skipAllForPlayer(UUID uuid) {
+        var playerCds = playerCooldowns.get(uuid);
+        if (playerCds == null || playerCds.isEmpty()) {
+            return 0;
+        }
+        int count = playerCds.size();
+        playerCooldowns.remove(uuid);
+        saveAll();
+        return count;
+    }
+
+    public int skipAllForAll() {
+        int total = 0;
+        for (var entry : playerCooldowns.entrySet()) {
+            total += entry.getValue().size();
+        }
+        playerCooldowns.clear();
+        saveAll();
+        return total;
+    }
 }
