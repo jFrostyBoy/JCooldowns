@@ -9,5 +9,5 @@ description: Установка задержек на команды для ра
 commands:
   jcd:
     description: Основная команда плагина
-    usage: /jcd <reload|list|set|unset|skip>
+    usage: /jcd <reload|list|set|unset|skip|skipall>
     permission: jcooldowns.admin
