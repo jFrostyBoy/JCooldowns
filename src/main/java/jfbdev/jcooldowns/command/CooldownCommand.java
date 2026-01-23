@@ -172,6 +172,57 @@ public class CooldownCommand implements CommandExecutor, TabCompleter {
                     sender.sendMessage(fail);
                 }
             }
+            case "skipall" -> {
+                if (args.length != 2) {
+                    sender.sendMessage(ColorUtil.colorize("&cИспользование: /jcd skipall <игрок> или /jcd skipall all"));
+                    return true;
+                }
+
+                String targetStr = args[1].toLowerCase();
+
+                if (targetStr.equals("all")) {
+                    int clearedCount = manager.skipAllForAll();
+                    String success = manager.getMessage("skipall_all_success")
+                            .replace("%count%", String.valueOf(clearedCount));
+                    sender.sendMessage(success);
+
+                    Bukkit.getOnlinePlayers().forEach(p ->
+                            p.sendMessage(manager.getMessage("skipall_notification")));
+                } else {
+                    String playerName = args[1];
+                    Player target = Bukkit.getPlayerExact(playerName);
+                    UUID uuid;
+
+                    if (target != null) {
+                        uuid = target.getUniqueId();
+                    } else {
+                        @SuppressWarnings("deprecation")
+                        org.bukkit.OfflinePlayer offline = Bukkit.getOfflinePlayer(playerName);
+                        if (offline.getName() == null || !offline.hasPlayedBefore()) {
+                            sender.sendMessage(manager.getMessage("player_not_found")
+                                    .replace("%player%", playerName));
+                            return true;
+                        }
+                        uuid = offline.getUniqueId();
+                    }
+
+                    int clearedCount = manager.skipAllForPlayer(uuid);
+                    if (clearedCount > 0) {
+                        String success = manager.getMessage("skipall_success")
+                                .replace("%player%", playerName)
+                                .replace("%count%", String.valueOf(clearedCount));
+                        sender.sendMessage(success);
+
+                        if (target != null) {
+                            target.sendMessage(manager.getMessage("skipall_notification"));
+                        }
+                    } else {
+                        String fail = manager.getMessage("skipall_not_found")
+                                .replace("%player%", playerName);
+                        sender.sendMessage(fail);
+                    }
+                }
+            }
             case "unset" -> {
                 if (args.length != 3) {
                     sender.sendMessage(ColorUtil.colorize("&cИспользование: /jcd unset <команда> <группа>"));
@@ -232,7 +283,7 @@ public class CooldownCommand implements CommandExecutor, TabCompleter {
         List<String> completions = new ArrayList<>();
 
         if (args.length == 1) {
-            completions.addAll(Arrays.asList("reload", "list", "set", "unset", "skip"));
+            completions.addAll(Arrays.asList("reload", "list", "set", "unset", "skip", "skipall"));
             return filter(completions, args[0]);
         }
 
@@ -256,6 +307,19 @@ public class CooldownCommand implements CommandExecutor, TabCompleter {
                         .map(Player::getName)
                         .filter(name -> name.toLowerCase().startsWith(args[2].toLowerCase()))
                         .collect(Collectors.toList());
+            }
+        }
+
+        if ("skipall".equals(subCmd)) {
+            if (args.length == 2) {
+                List<String> suggestions = Bukkit.getOnlinePlayers().stream()
+                        .map(Player::getName)
+                        .filter(name -> name.toLowerCase().startsWith(args[1].toLowerCase()))
+                        .collect(Collectors.toList());
+                if ("all".startsWith(args[1].toLowerCase())) {
+                    suggestions.add("all");
+                }
+                return suggestions;
             }
         }
 
