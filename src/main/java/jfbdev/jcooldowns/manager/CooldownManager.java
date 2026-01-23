@@ -176,16 +176,30 @@ public class CooldownManager {
         User user = lp.getUserManager().getUser(uuid);
         if (user == null) return 0;
 
-        long max = 0;
+        Group highestPriorityGroup = null;
+        int highestWeight = Integer.MIN_VALUE;
+
         for (Group group : user.getInheritedGroups(user.getQueryOptions())) {
-            String groupName = group.getName().toLowerCase();
-            var groupCd = groupCooldowns.get(groupName);
-            if (groupCd != null) {
-                Long sec = groupCd.get(cmd);
-                if (sec != null && sec > max) max = sec;
+            int weight = group.getWeight().orElse(0);
+
+            if (weight > highestWeight) {
+                highestWeight = weight;
+                highestPriorityGroup = group;
             }
         }
-        return max;
+
+        if (highestPriorityGroup == null) {
+            return 0;
+        }
+
+        String groupName = highestPriorityGroup.getName().toLowerCase();
+        var groupCd = groupCooldowns.get(groupName);
+        if (groupCd == null) {
+            return 0;
+        }
+
+        Long sec = groupCd.get(cmd.toLowerCase());
+        return sec != null ? sec : 0;
     }
 
     public void sendCooldownNotification(Player player, String cmd, long remainingMillis) {
@@ -256,5 +270,23 @@ public class CooldownManager {
     public List<String> getMessageList(String key) {
         return plugin.getConfig().getStringList("messages." + key).stream()
                 .map(ColorUtil::colorize).toList();
+    }
+
+    public boolean skipCooldown(UUID uuid, String command) {
+        String cmdLower = command.toLowerCase();
+        var playerCds = playerCooldowns.get(uuid);
+        if (playerCds == null) {
+            return false;
+        }
+
+        Long removed = playerCds.remove(cmdLower);
+        if (removed != null) {
+            if (playerCds.isEmpty()) {
+                playerCooldowns.remove(uuid);
+            }
+            saveAll();
+            return true;
+        }
+        return false;
     }
 }
