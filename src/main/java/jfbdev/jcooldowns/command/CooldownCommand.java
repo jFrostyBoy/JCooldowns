@@ -13,14 +13,12 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CooldownCommand implements CommandExecutor, TabCompleter {
@@ -129,6 +127,51 @@ public class CooldownCommand implements CommandExecutor, TabCompleter {
                         .replace("%time%", TimeUtil.formatMillis(millis));
                 sender.sendMessage(success);
             }
+            case "skip" -> {
+                if (args.length != 3) {
+                    sender.sendMessage(ColorUtil.colorize("&cИспользование: /jcd skip <команда> <игрок>"));
+                    return true;
+                }
+
+                String cmdName = manager.resolveCommand(args[1].toLowerCase());
+                String playerName = args[2];
+
+                Player target = Bukkit.getPlayerExact(playerName);
+                UUID uuid;
+
+                if (target != null) {
+                    uuid = target.getUniqueId();
+                } else {
+                    @SuppressWarnings("deprecation")
+                    org.bukkit.OfflinePlayer offline = Bukkit.getOfflinePlayer(playerName);
+                    if (offline.getName() == null || !offline.hasPlayedBefore()) {
+                        sender.sendMessage(manager.getMessage("player_not_found")
+                                .replace("%player%", playerName));
+                        return true;
+                    }
+                    uuid = offline.getUniqueId();
+                }
+
+                boolean removed = manager.skipCooldown(uuid, cmdName);
+
+                if (removed) {
+                    String success = manager.getMessage("skip_success")
+                            .replace("%command%", cmdName)
+                            .replace("%player%", playerName);
+                    sender.sendMessage(success);
+
+                    if (target != null) {
+                        String notify = manager.getMessage("skip_notification")
+                                .replace("%command%", cmdName);
+                        target.sendMessage(notify);
+                    }
+                } else {
+                    String fail = manager.getMessage("skip_not_found")
+                            .replace("%command%", cmdName)
+                            .replace("%player%", playerName);
+                    sender.sendMessage(fail);
+                }
+            }
             case "unset" -> {
                 if (args.length != 3) {
                     sender.sendMessage(ColorUtil.colorize("&cИспользование: /jcd unset <команда> <группа>"));
@@ -189,42 +232,63 @@ public class CooldownCommand implements CommandExecutor, TabCompleter {
         List<String> completions = new ArrayList<>();
 
         if (args.length == 1) {
-            completions.addAll(Arrays.asList("reload", "list", "set", "unset"));
+            completions.addAll(Arrays.asList("reload", "list", "set", "unset", "skip"));
             return filter(completions, args[0]);
         }
 
         String subCmd = args[0].toLowerCase();
+
         if ("set".equals(subCmd) || "unset".equals(subCmd)) {
             if (args.length == 2) {
-                try {
-                    var commandMap = Bukkit.getCommandMap();
-                    Field knownCommandsField = commandMap.getClass().getDeclaredField("knownCommands");
-                    knownCommandsField.setAccessible(true);
-                    @SuppressWarnings("unchecked")
-                    Map<String, org.bukkit.command.Command> knownCommands = (Map<String, org.bukkit.command.Command>) knownCommandsField.get(commandMap);
-
-                    List<String> commandNames = knownCommands.values().stream()
-                            .map(org.bukkit.command.Command::getName)
-                            .map(String::toLowerCase)
-                            .filter(name -> !name.contains(":"))
-                            .distinct()
-                            .collect(Collectors.toList());
-
-                    return filter(commandNames, args[1]);
-                } catch (Exception e) {
-                    return new ArrayList<>();
-                }
+                return getCommandNames(args[1]);
             }
             if (args.length == 3) {
-                LuckPerms lp = LuckPermsProvider.get();
-                return filter(lp.getGroupManager().getLoadedGroups().stream()
-                        .map(Group::getName)
-                        .map(String::toLowerCase)
-                        .collect(Collectors.toList()), args[2]);
+                return getGroupNames(args[2]);
+            }
+        }
+
+        if ("skip".equals(subCmd)) {
+            if (args.length == 2) {
+                return getCommandNames(args[1]);
+            }
+            if (args.length == 3) {
+                return Bukkit.getOnlinePlayers().stream()
+                        .map(Player::getName)
+                        .filter(name -> name.toLowerCase().startsWith(args[2].toLowerCase()))
+                        .collect(Collectors.toList());
             }
         }
 
         return completions;
+    }
+
+    private List<String> getCommandNames(String input) {
+        try {
+            var commandMap = Bukkit.getCommandMap();
+            Field knownCommandsField = commandMap.getClass().getDeclaredField("knownCommands");
+            knownCommandsField.setAccessible(true);
+            @SuppressWarnings("unchecked")
+            Map<String, org.bukkit.command.Command> knownCommands = (Map<String, org.bukkit.command.Command>) knownCommandsField.get(commandMap);
+
+            return knownCommands.values().stream()
+                    .map(org.bukkit.command.Command::getName)
+                    .map(String::toLowerCase)
+                    .filter(name -> !name.contains(":"))
+                    .distinct()
+                    .filter(name -> name.startsWith(input.toLowerCase()))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+    }
+
+    private List<String> getGroupNames(String input) {
+        LuckPerms lp = LuckPermsProvider.get();
+        return lp.getGroupManager().getLoadedGroups().stream()
+                .map(Group::getName)
+                .map(String::toLowerCase)
+                .filter(name -> name.startsWith(input.toLowerCase()))
+                .collect(Collectors.toList());
     }
 
     private List<String> filter(List<String> list, String input) {
