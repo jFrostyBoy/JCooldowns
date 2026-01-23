@@ -24,14 +24,15 @@
 ### Команды
 > Все команды начинаются с `/jcd` и требуют права `jcooldowns.admin`
 
-| Команда                               | Описание                                       | Пример                  |
-|---------------------------------------|------------------------------------------------|-------------------------|
-| `/jcd reload`                         | Перезагрузить конфигурацию                     | `/jcd reload`           |
-| `/jcd list`                           | Показать список всех кулдаунов по группам      | `/jcd list`             |
-| `/jcd set <команда> <группа> <время>` | Установить кулдаун для команды в группе        | `/jcd set home vip 30m` |
-| `/jcd unset <команда> <группа>`       | Удалить кулдаун для команды в группе           | `/jcd unset home vip`   |
-| `/jcd` (без аргументов)               | Показать помощь по командам                    | `/jcd`                  |
-| `/jcd  skip <команда> <игрок>`        | Сбросить задержку на команду указанному игроку | `/jcd skip home Notch`  |
+| Команда                               | Описание                                                                     | Пример                                     |
+|---------------------------------------|------------------------------------------------------------------------------|--------------------------------------------|
+| `/jcd reload`                         | Перезагрузить конфигурацию                                                   | `/jcd reload`                              |
+| `/jcd list`                           | Показать список всех кулдаунов по группам                                    | `/jcd list`                                |
+| `/jcd set <команда> <группа> <время>` | Установить кулдаун для команды в группе                                      | `/jcd set home vip 30m`                    |
+| `/jcd unset <команда> <группа>`       | Удалить кулдаун для команды в группе                                         | `/jcd unset home vip`                      |
+| `/jcd` (без аргументов)               | Показать помощь по командам                                                  | `/jcd`                                     |
+| `/jcd  skip <команда> <игрок>`        | Сбросить задержку на команду указанному игроку                               | `/jcd skip home Notch`                     |
+| `/jcd skipall <игрок/all>`            | Сбросить задержку на все команды указанного игрока<br>(`all` - всех игроков) | `/jcd skipall Notch`<br>`/jcd skipall all` |
 
 ### Права (permissions)
 
@@ -59,11 +60,16 @@ messages:
     - "  &6/jcd list &7- список кулдаунов"
     - "  &6/jcd reload &7- перезагрузить конфиг"
     - "  &6/jcd skip <команда> <игрок> &7- сбросить кулдаун"
+    - "  &6/jcd skipall <игрок/all> &7- сбросить кулдаун на все команды игрока(ов)"
     - ""
   skip_success: "&aКулдаун на команду &e%command% &aу игрока &f%player% &aсброшен."
   skip_not_found: "&cУ игрока &f%player% &cнет активного кулдауна на &e%command%&c."
   skip_notification: "&aАдминистратор сбросил кулдаун на команду &e%command%&a. Можешь использовать снова!"
   player_not_found: "&cИгрок &f%player% &cне найден или никогда не заходил на сервер."
+  skipall_success: "&aВсе кулдауны игрока &f%player% &aсброшены (&e%count%&a шт.)"
+  skipall_not_found: "&cУ игрока &f%player% &cнет активных кулдаунов"
+  skipall_all_success: "&aВсе кулдауны всех игроков сброшены (&e%count%&a шт.)"
+  skipall_notification: "&aВсе твои кулдауны были сброшены администратором. Можешь использовать команды снова!"
 
 # Отправка сообщения задержки по центру екрана
 cooldown_title:
@@ -153,7 +159,5 @@ cooldowns:
 <img width="708" height="111" alt="Screenshot_3" src="https://github.com/user-attachments/assets/d4b9ea68-8a4d-41a2-8b5c-91a49a5152a4" />
 <img width="563" height="106" alt="Screenshot_1" src="https://github.com/user-attachments/assets/f49ceb5e-1b49-495c-bb56-c431e03c1f2b" />
 <img width="910" height="287" alt="Знімок_20260123_155033" src="https://github.com/user-attachments/assets/ac06c864-687b-47fb-91b6-a95aa61bf267" />
-<img width="976" height="133" alt="Знімок_20260123_155021" src="https://github.com/user-attachments/assets/f590d7d1-d5e9-4195-b399-fcdb5e7536e6" />
-
-
-
+<img width="998" height="319" alt="Знімок_20260124_014319" src="https://github.com/user-attachments/assets/42419c01-cc8e-4846-bb05-ce1b5382f49c" />
+<img width="1001" height="189" alt="Знімок_20260124_014120" src="https://github.com/user-attachments/assets/2fa95323-28db-4890-b1c9-5d8c199b6ff3" />
